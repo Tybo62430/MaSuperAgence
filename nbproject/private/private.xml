@@ -3,7 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/sites/MaSuperAgence/src/Entity/Property.php</file>
+            <file>file:/var/www/sites/MaSuperAgence/config/packages/security.yaml</file>
+            <file>file:/var/www/sites/MaSuperAgence/src/Controller/PropertyController.php</file>
+            <file>file:/var/www/sites/MaSuperAgence/src/Controller/SecurityController.php</file>
+            <file>file:/var/www/sites/MaSuperAgence/src/Entity/User.php</file>
+            <file>file:/var/www/sites/MaSuperAgence/templates/security/newTwigTemplate.html.twig</file>
         </group>
     </open-files>
 </project-private>
