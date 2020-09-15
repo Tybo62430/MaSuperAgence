@@ -9,9 +9,13 @@ use Doctrine\ORM\Mapping as ORM;
 use Cocur\Slugify\Slugify;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity(repositoryClass=PropertyRepository::class)
+ * @Vich\Uploadable
  * @UniqueEntity("title")
  */
 class Property {
@@ -27,6 +31,21 @@ class Property {
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    /**
+     *
+     * @var File|null 
+     * @Vich\UploadableField(mapping="property_image", fileNameProperty="fileName")
+     * @Assert\Image(mimeTypes="image/jpeg")
+     */
+    private $imageFile;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     *
+     * @var string|null
+     */
+    private $fileName;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -101,6 +120,11 @@ class Property {
      */
     private $options;
 
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updated_at;
+
     public function __construct() {
         $this->created_at = new \DateTime();
         $this->options = new ArrayCollection();
@@ -108,6 +132,28 @@ class Property {
 
     public function getId(): ?int {
         return $this->id;
+    }
+
+    public function setImageFile(?File $imageFile): Property {
+        $this->imageFile = $imageFile;
+        
+        if ($this->imageFile instanceof UploadedFile) {
+            $this->updated_at = new \DateTime('now');
+        }
+        return $this;
+    }
+
+    public function getImageFile(): ?File {
+        return $this->imageFile;
+    }
+
+    public function setFileName(?string $fileName): Property {
+        $this->fileName = $fileName;
+        return $this;
+    }
+
+    public function getFileName(): ?String {
+        return $this->fileName;
     }
 
     public function getTitle(): ?string {
@@ -197,10 +243,10 @@ class Property {
 
         return $this;
     }
-    
+
     public function getHeatType(): string {
         return self::HEAT[$this->heat];
-    }   
+    }
 
     public function getCity(): ?string {
         return $this->city;
@@ -255,13 +301,11 @@ class Property {
     /**
      * @return Collection|Option[]
      */
-    public function getOptions(): Collection
-    {
+    public function getOptions(): Collection {
         return $this->options;
     }
 
-    public function addOption(Option $option): self
-    {
+    public function addOption(Option $option): self {
         if (!$this->options->contains($option)) {
             $this->options[] = $option;
             $option->addProperty($this);
@@ -270,12 +314,23 @@ class Property {
         return $this;
     }
 
-    public function removeOption(Option $option): self
-    {
+    public function removeOption(Option $option): self {
         if ($this->options->contains($option)) {
             $this->options->removeElement($option);
             $option->removeProperty($this);
         }
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updated_at;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updated_at): self
+    {
+        $this->updated_at = $updated_at;
 
         return $this;
     }
