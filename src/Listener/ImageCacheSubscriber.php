@@ -5,57 +5,57 @@ namespace App\Listener;
 use Doctrine\Common\EventSubscriber;
 use Liip\ImagineBundle\Imagine\Cache\CacheManager;
 use Vich\UploaderBundle\Templating\Helper\UploaderHelper;
+use App\Entity\Property;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
-
 class ImageCacheSubscriber implements EventSubscriber {
-    
+
     /**
      *
      * @var CacheManager 
      */
     private $cacheManager;
-    
+
     /**
      *
      * @var UploaderHelper 
      */
     private $uploaderHelper;
-    
+
     public function __construct(CacheManager $cacheManager, UploaderHelper $uploaderHelper) {
         $this->cacheManager = $cacheManager;
-        $this-> uploaderHelper = $uploaderHelper;
+        $this->uploaderHelper = $uploaderHelper;
     }
-    
-    public function getSubscribedEvents(){
+
+    public function getSubscribedEvents() {
         return [
-            'preRemouve',
+            'preRemove',
             'preUpdate'
         ];
     }
-    
-    public function preRemouve(LifecycleEventArgs $args) {
-        $entity = $args >getEntity();
-        
-        if($entity instanceof UploaderFile){
+
+    public function preRemove(LifecycleEventArgs $args) {
+
+        $entity = $args->getEntity();
+
+        if (!$entity instanceof Property) {
             return;
         }
-        
+
         $this->cacheManager->remove($this->uploaderHelper->asset($entity, 'imageFile'));
-        
     }
-    
-    public function preUpdate(PreUpdateEventArgs $args)
-    {
-        $entity = $args >getEntity();
-        
-        if($entity instanceof UploaderFile){
+
+    public function preUpdate(LifecycleEventArgs $args) {
+
+        $entity = $args->getEntity();
+
+        if (!$entity instanceof Property) {            
             return;
         }
-        if($entity->getImageFile() instanceof UploaderFile){
-            
+        if ($entity->getImageFile() instanceof UploadedFile) {
+
             $this->cacheManager->remove($this->uploaderHelper->asset($entity, 'imageFile'));
-            
-        }    
+        }
     }
+
 }
