@@ -74,7 +74,7 @@ class PropertyController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}-{id}", name="property_show", methods={"GET"}, requirements={"slug": "[a-z0-9\-]*"})
+     * @Route("/{slug}-{id}", name="property_show", methods={"GET","POST"}, requirements={"slug": "[a-z0-9\-]*"})
      */
     public function show(Property $property, string $slug, Request $request, ContactNotification $notification): Response
     {
@@ -94,10 +94,10 @@ class PropertyController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $notification->notify($contact);
             $this->addFlash('success', 'Votre Email a bien été envoyé');
-            // return $this->redirectToRoute('property_show', [
-            //     'id' => $property->getId(),
-            //     'slug' => $property->getSlug()
-            // ]);
+            return $this->redirectToRoute('property_show', [
+                'id' => $property->getId(),
+                'slug' => $property->getSlug()
+            ]);
         }
 
 

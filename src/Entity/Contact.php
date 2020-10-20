@@ -2,21 +2,21 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Validator\Constraint as Assert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Contact
 {
     /**
      * @var string|null
      * @Assert\NotBlank()
-     * @Assert\Lenght(min=2, max=100)
+     * @Assert\Length(min=2, max=100)
      */
     private $firstname;
 
     /**
      * @var string|null
      * @Assert\NotBlank()
-     * @Assert\Lenght(min=2, max=100)
+     * @Assert\Length(min=2, max=100)
      */
     private $lastname;
 
@@ -24,7 +24,7 @@ class Contact
      * @var string|null
      * @Assert\NotBlank()
      * @Assert\Regex(
-     * patern="/[0-9]{10}/"
+     * pattern="/[0-9]{10}/"
      * )
      */
     private $phone;
@@ -39,7 +39,7 @@ class Contact
     /**
      * @var string|null
      * @Assert\NotBlank()
-     * @Assert\Lenght(min=10)
+     * @Assert\Length(min=10)
      */
     private $message;
 
@@ -141,7 +141,7 @@ class Contact
      *
      * @return message|null
      */
-    public function getMessage(): ?message
+    public function getMessage(): ?string
     {
         return $this->message;
     }

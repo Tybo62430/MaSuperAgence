@@ -2,32 +2,31 @@
 
 namespace App\Notification;
 
-use Symfony\Component\Mailer\MailerInterface;
 use App\Entity\Contact;
-use Symfony\Component\Mime\Email;
 use Twig\Environment;
 
 class ContactNotification
 {
     private $mailer;
-    private $rendered;
+    private $renderer;
 
-    public function __construct(MailerInterface $mailer, Environment $rendered)
+    public function __construct(\Swift_Mailer $mailer, Environment $renderer)
     {
         $this->mailer = $mailer;
-        $this->rendered = $mailer;
+        $this->renderer = $renderer;
     }
+
     public function notify(Contact $contact)
     {
-        $email = (new Email())
-            ->from('noreply@agence.fr')
-            ->to('agence@agence.fr')
-            ->replyTo($contact->getMail())
-            //->priority(Email::PRIORITY_HIGH)
-            ->subject('Time for Symfony Mailer!')
-            ->text('Sending emails is fun again!')
-            ->html('<p>See Twig integration for better HTML integration!</p>');
+        $message = (new \Swift_Message('Agence : ' . $contact->getProperty()->getTitle()))
+        ->setFrom('noreply@agence.fr')
+        ->setTo('contact@agence.fr')
+        ->setReplyTo($contact->getMail())
+        ->setBody($this->renderer->render('emails/contact.html.twig', [
+            'contact' => $contact
 
-        $this->mailer->send($email);
+        ]),'text/html')
+        ;
+        $this->mailer->send($message);
     }
 }
