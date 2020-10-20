@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use Symfony\Component\Mime\Message;
 use Symfony\Component\Validator\Constraint as Assert;
 
 class Contact
@@ -48,13 +47,13 @@ class Contact
      * @var Property|null
      */
     private $property;
-    
+
     /**
      * Undocumented function
      *
      * @return string|null
      */
-    public function getFirstname() :?string
+    public function getFirstname(): ?string
     {
         return $this->firstname;
     }
@@ -90,7 +89,7 @@ class Contact
     public function setLastname(?string $lastname): Contact
     {
         $this->lastname = $lastname;
-        return $this
+        return $this;
     }
 
     /**
@@ -156,7 +155,7 @@ class Contact
     public function setMessage(?string $message): Contact
     {
         $this->message = $message;
-        return $this
+        return $this;
     }
 
     /**
